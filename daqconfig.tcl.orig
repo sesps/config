@@ -1,0 +1,79 @@
+hinp create hinp1 0x40000000
+hinp config hinp1 -firmware /home/anasen/daq/hinp_usb/xlmxxv_rev511.bit
+marker create XLM1 0xaaaa
+
+hinp create hinp2 0x80000000
+hinp config hinp2 -firmware /home/anasen/daq/hinp_usb/xlmxxv_rev511.bit
+marker create XLM2 0xbbbb
+marker create CAEN 0xcccc
+
+madc create madc1 -base 0x77000000 -id 9 -ipl 0
+madc create madc2 -base 0x88000000 -id 10 -ipl 0
+adc create adc1 0x11000000
+adc create adc2 0x22000000
+adc create tdc1 0xCC000000
+adc config adc1 -geo 2 -requiredata on -supressrange on -ipl 0 -thresholds [list 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72] -smallthresholds on
+adc config adc2 -geo 3 -requiredata on -supressrange on -ipl 0 -thresholds [list 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72 72] -smallthresholds on
+#Pus [ adc cget tdc1 ]
+#puts [ adc cget tdc1 ]
+adc config tdc1 -geo 12 -requiredata on -supressrange on -ipl 0 -timescale 1200  -smallthresholds off
+puts [ adc cget tdc1 ]
+#adc config tdc1  -requiredata on -supressrange on -ipl 0 -timescale 1200 -thresholds [list 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13] -smallthresholds off
+
+v830 create scalr 0x55550000
+v830 config scalr -channels 0xffffffff
+
+stack create event
+stack config event -trigger nim1
+stack config event -delay 25 -modules [list XLM1 hinp1 XLM2 hinp2 CAEN adc1 adc2 madc1 madc2 tdc1]
+
+stack create scal
+stack  config scal -trigger scaler
+stack config scal -modules [list scalr]
+set adcChannels(adc1) [list adc1.00 adc1.01 adc1.02 adc1.03 adc1.04 adc1.05 \
+                            adc1.06 adc1.07 adc1.08 adc1.09 adc1.10 adc1.11 \
+                            adc1.12 adc1.13 adc1.14 adc1.15 adc1.16 adc1.17 \
+                            adc1.18 adc1.19 adc1.20 adc1.21 adc1.22 adc1.23 \
+                            adc1.24 adc1.25 adc1.26 adc1.27 adc1.28 adc1.29 \
+                            adc1.30 adc1.31]
+
+set adcChannels(adc2) [list adc2.00 adc2.01 adc2.02 adc2.03 adc2.04 adc2.05 \
+                            adc2.06 adc2.07 adc2.08 adc2.09 adc2.10 adc2.11 \
+                            adc2.12 adc2.13 adc2.14 adc2.15 adc2.16 adc2.17 \
+                            adc2.18 adc2.19 adc2.20 adc2.21 adc2.22 adc2.23 \
+                            adc2.24 adc2.25 adc2.26 adc2.27 adc2.28 adc2.29 \
+                            adc2.30 adc2.31]
+
+set adcChannels(tdc1) [list tdc1.00 tdc1.01 tdc1.02 tdc1.03 tdc1.04 tdc1.05 \
+                            tdc1.06 tdc1.07 tdc1.08 tdc1.09 tdc1.10 tdc1.11 \
+                            tdc1.12 tdc1.13 tdc1.14 tdc1.15 tdc1.16 tdc1.17 \
+                            tdc1.18 tdc1.19 tdc1.20 tdc1.21 tdc1.22 tdc1.23 \
+                            tdc1.24 tdc1.25 tdc1.26 tdc1.27 tdc1.28 tdc1.29 \
+                            tdc1.30 tdc1.31]
+
+set adcChannels(madc1) [list madc1.00 madc1.01 madc1.02 madc1.03 madc1.04 madc1.05 \
+                            madc1.06 madc1.07 madc1.08 madc1.09 madc1.10 madc1.11 \
+                            madc1.12 madc1.13 madc1.14 madc1.15 madc1.16 madc1.17 \
+                            madc1.18 madc1.19 madc1.20 madc1.21 madc1.22 madc1.23 \
+                            madc1.24 madc1.25 madc1.26 madc1.27 madc1.28 madc1.29 \
+                            madc1.30 madc1.31]
+
+set adcChannels(madc2) [list madc2.00 madc2.01 madc2.02 madc2.03 madc2.04 madc2.05 \
+                            madc2.06 madc2.07 madc2.08 madc2.09 madc2.10 madc2.11 \
+                            madc2.12 madc2.13 madc2.14 madc2.15 madc2.16 madc2.17 \
+                            madc2.18 madc2.19 madc2.20 madc2.21 madc2.22 madc2.23 \
+                            madc2.24 madc2.25 madc2.26 madc2.27 madc2.28 madc2.29 \
+                            madc2.30 madc2.31]
+
+set HINPChips(hinp1) [list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ]
+set adcChannels(hinp1) "hinp1"
+#like adcs, the marker must have a ´histogram' for one channel defined
+#to be unpacked.
+set adcChannels(XLM1) [list marker1]
+
+set HINPChips(hinp2) [list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 ]
+set adcChannels(hinp2) "hinp2"
+#like adcs, the marker must have a ´histogram' for one channel defined
+#to be unpacked.
+set adcChannels(XLM2) [list marker2]
+set adcChannels(CAEN) [list marker3]
